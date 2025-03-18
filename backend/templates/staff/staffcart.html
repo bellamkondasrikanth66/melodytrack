@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .quantity-btn {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #4A5568; 
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .delete-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #E53E3E;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-700 text-white">
+
+    <div class="flex">
+        <div class="sidebar bg-white shadow-md w-64 p-4" style="background-color: #d7d8da;">
+            {% include 'staff/staffnav.html' %}
+        </div>
+
+        <div class="flex-1 p-10">   
+            <h1 class="text-3xl font-bold mb-6">Cart</h1>
+            <div class="transparent-layer">
+                <table class="w-full table-auto bg-gray-800 text-white rounded">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2">Title</th>
+                            <th class="border px-4 py-2">Price</th>
+                            <th class="border px-4 py-2">Quantity</th>
+                            <th class="border px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td class="border px-4 py-2">{{ item.cd.title }}</td>
+                            <td class="border px-4 py-2">{{ item.cd.price }}</td>
+                            <td class="border px-4 py-2">
+                                <a href="{% url 'decrement_cart_item' %}?item_id={{ item.id }}" class="quantity-btn">-</a>
+                                <span class="quantity mx-2">{{ item.quantity }}</span>
+                                <a href="{% url 'increment_cart_item' %}?item_id={{ item.id }}" class="quantity-btn">+</a>
+                            </td>
+                            <td class="border px-4 py-2">
+                                <a href="{% url 'delete_cart_item' %}?item_id={{ item.id }}" class="delete-btn">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td class="border px-4 py-2 font-bold" colspan="3">Total</td>
+                            <td class="border px-4 py-2 font-bold">{{ total_price }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="transparent-layer mb-4">
+                <hr class="md-6">
+                <form action="{% url 'staffproceedtonext' %}" method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="flex justify-end">
+                        <button type="submit" class="p-2 bg-blue-600 hover:bg-blue-700 rounded">Next</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

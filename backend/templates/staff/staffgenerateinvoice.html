@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MelodyTrack Music Inventory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: auto;
+            background: #2d2d2d; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(109, 108, 108, 0.1);
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .invoice-header img {
+            max-height: 50px;
+        }
+        .invoice-details {
+            margin-top: 20px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #7d7a7a;
+            padding: 8px;
+            text-align: center;
+        }
+        .invoice-table th {
+            background-color: #7d7a7a;
+        }
+        .invoice-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-700 text-white">
+
+    <div class="flex">
+        <div class="sidebar bg-white shadow-md w-64 p-4" style="background-color: #d7d8da;">
+            {% include 'staff/staffnav.html' %}
+        </div>
+
+        <div class="flex-1 p-10">
+            <div class="invoice-container">
+                <div class="invoice-header">
+                    <div>
+                        <img src="{% static 'images/images.png' %}" alt="Brand Logo">
+                        <p class="text-sm">MelodyTrack Music Inventory</p>
+                    </div>
+                    <div class="text-right">
+                        <h2 class="text-2xl font-bold">Invoice</h2>
+                        <p>www.melodytrack.com</p>
+                        <p>123 Daton St., Daton</p>
+                        <p>+123-456-7890</p>
+                    </div>
+                </div>
+
+                <div class="invoice-details">
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="text-lg">INVOICE TO:</p>
+                            <p class="font-bold text-xl">{{ customer_details.customer_first_name }} {{ customer_details.customer_last_name }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p>Contact: {{ customer_details.customer_phone_number }}</p>
+                            <p>mail: {{ customer_details.customer_email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>PRICE</th>
+                            <th>QTY</th>
+                            <th>AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.title }}</td>
+                            <td>${{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="text-right mt-4">
+                    <p class="text-lg"><span class="font-semibold">Total Price:</span> ${{ total_price }}</p>
+                    <p class="text-lg"><span class="font-semibold">Tax:</span> ${{ tax }}</p>
+                    <p class="text-xl font-bold mt-2"><span class="font-semibold">Total with Tax:</span> ${{ total_with_tax }}</p>
+                </div>
+                <div class="text-left mt-4">
+                    <form action="{% url 'staffcart' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Update cart Details
+                        </button>
+                    </form>
+                </div>
+                <div class="text-right mt-4">
+                    <form action="{% url 'customerpurchaseaction' %}" method="POST">
+                        {% csrf_token %}
+                        <input hidden name="first_name" value="{{ customer_details.customer_first_name }}">
+                        <input hidden name="last_name" value="{{ customer_details.customer_last_name }}">
+                        <input hidden name="contact" value="{{ customer_details.customer_phone_number }}">
+                        <input hidden name="email" value="{{ customer_details.customer_email }}">
+                        
+                        {% for item in cart_items %}
+                        <input hidden name="title" value="{{ item.title }}">
+                        <input hidden name="price" value="{{ item.price }}">
+                        <input hidden name="quantity" value="{{ item.quantity }}">
+                        {% endfor %}
+                        
+                        <input hidden name="total_price" value="{{ total_price }}">
+                        <input hidden name="tax" value="{{ tax }}">
+                        <input hidden name="total_with_tax" value="{{ total_with_tax }}">
+                        
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

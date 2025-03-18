@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-700 text-white">
+
+    <div class="flex">
+        <div class="sidebar bg-white shadow-md w-64 p-4" style="background-color: #d7d8da;">
+            {% include 'staff/staffnav.html' %}
+        </div>
+
+        <div class="flex-1 p-10">
+            <h1 class="text-3xl font-bold mb-6">Low stock Alert's</h1>
+            <div class="transparent-layer">
+                <form action="{% url 'report_admin' %}" method="post">
+                    {% csrf_token %}
+                    <table class="w-full table-auto bg-gray-800 text-white rounded">
+                        <thead>
+                            <tr>
+                                <th class="border px-4 py-2">Message</th>
+                                <th class="border px-4 py-2">Generated Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alert in page_obj %}
+                            <tr>
+                                <td class="border px-4 py-2">{{ alert.alert_message }}</td>
+                                <td class="border px-4 py-2">{{ alert.alert_time }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <button type="submit" class="px-3 py-1 bg-gray-800 text-white rounded mt-4">Report All to Admin</button>
+                </form>
+                <div class="mt-4">
+                    <ul class="flex justify-center space-x-2">
+                        {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-800 text-white rounded">Previous</a></li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        <li>
+                            <a href="?page={{ num }}" class="px-3 py-1 bg-gray-800 text-white rounded {% if page_obj.number == num %}bg-blue-500{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-800 text-white rounded">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

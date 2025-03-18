@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-700 text-white">
+
+    <div class="flex">
+        <div class="sidebar bg-white shadow-md w-64 p-4" style="background-color: #d7d8da;">
+            {% include 'staff/staffnav.html' %}
+        </div>
+
+        <div class="flex-1 p-10">
+            <h1 class="text-3xl font-bold mb-6">Staff Dashboard</h1>
+    
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <img src="data:image/png;base64,{{ pie_chart_data }}" alt="CD Inventory Pie Chart" class="w-full h-64 object-contain">
+                    </div>
+                    
+                    <div>
+                        <img src="data:image/png;base64,{{ bar_chart_data }}" alt="Supplier Purchases Bar Chart" class="w-full h-64 object-contain">
+                    </div>
+    
+                    
+                    <div>
+                        <img src="data:image/png;base64,{{ user_pie_chart_data }}" alt="Another Chart" class="w-full h-64 object-contain">
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>

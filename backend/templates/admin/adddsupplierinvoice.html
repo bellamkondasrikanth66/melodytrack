@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: auto;
+            background: #2d2d2d; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(109, 108, 108, 0.1);
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .invoice-header img {
+            max-height: 50px;
+        }
+        .invoice-details {
+            margin-top: 20px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #7d7a7a;
+            padding: 8px;
+            text-align: center;
+        }
+        .invoice-table th {
+            background-color: #7d7a7a;
+        }
+        .invoice-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body class="bg-gray-700 text-white">
+
+    <div class="flex">
+        <div class="sidebar bg-white shadow-md w-64 p-4" style="background-color: #d7d8da;">
+            {% include 'admin/adminnav.html' %}
+        </div>
+
+        <div class="flex-1 p-10">
+            <h1 class="text-3xl font-bold mb-6">Supplier Invoice</h1>
+
+            <form method="GET" class="mb-6">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+                    <input type="text" name="supplier_email" placeholder="Supplier Email" class="p-2 rounded bg-gray-800 text-white">
+                </div>
+            </form>
+
+            <div class="flex-1 p-10">
+                <div class="invoice-container">
+                    <div class="invoice-header">
+                        <div>
+                            <img src="{% static 'images/images.png' %}" alt="Brand Logo">
+                            <p class="text-sm">MelodyTrack Music Inventory</p>
+                        </div>
+                        <div class="text-right">
+                            <h2 class="text-2xl font-bold">Invoice</h2>
+                            <p>www.melodytrack.com</p>
+                            <p>123 Daton St., Daton</p>
+                            <p>+123-456-7890</p>
+                        </div>
+                    </div>
+    
+                    {% if latest_purchase %}
+                    <div class="invoice-details">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-lg">INVOICE TO:</p>
+                                <p class="font-bold text-xl">{{ latest_purchase.first_name }} {{ latest_purchase.last_name }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p>Contact: {{ latest_purchase.contact }}</p>
+                                <p>Email: {{ latest_purchase.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p>No supplier found for the provided email.</p>
+                    {% endif %}
+    
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Sub-category</th>
+                                <th>QTY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if latest_purchase %}
+                            <tr>
+                                <td>{{ latest_purchase.category }}</td>
+                                <td>{{ latest_purchase.subcategory }}</td>
+                                <td>{{ latest_purchase.quantity }}</td>
+                            </tr>
+                            {% else %}
+                                <p class="mt-6">No purchase found for the provided email.</p>
+                            {% endif %}
+                        </tbody>
+                    </table>
+    
+                    <div class="text-right mt-4">
+                        <form action="{% url 'addsupplierinvoice' %}" method="POST">
+                            {% csrf_token %}
+                            <input hidden name="first_name" value="{{ latest_purchase.first_name }}">
+                            <input hidden name="last_name" value="{{ latest_purchase.last_name }}">
+                            <input hidden name="contact" value="{{ latest_purchase.contact }}">
+                            <input hidden name="email" value="{{ latest_purchase.email }}">
+                            <input hidden name="category" value="{{ latest_purchase.category }}">
+                            <input hidden name="subcategory" value="{{ latest_purchase.subcategory }}">
+                            <input hidden name="quantity" value="{{ latest_purchase.quantity }}">
+                            <div class="text-right mt-4">
+                                <p class="text-lg">
+                                    <span class="font-semibold">Total Price:</span>
+                                    <input type="text" name="total_price" value="{{ total_price }}" class="ml-2" style="color: rgb(0, 0, 0);"/>
+                                </p>
+                            </div>
+                            
+                            <br>
+                            
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

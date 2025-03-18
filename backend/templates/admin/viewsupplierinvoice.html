@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-700 text-white">
+
+    <div class="flex">
+        <div class="sidebar bg-white shadow-md w-64 p-4" style="background-color: #d7d8da;">
+            {% include 'admin/adminnav.html' %}
+        </div>
+
+        <div class="flex-1 p-10">
+            <div class="transparent-layer">
+                <h2 class="text-2xl font-bold mb-4">Supplier Purchases</h2>
+                    <table class="w-full table-auto bg-gray-800 text-white rounded">
+                        <thead>
+                            <tr>
+                                <th class="border px-4 py-2">Username</th>
+                                <th class="border px-4 py-2">Email</th>
+                                <th class="border px-4 py-2">Quantity</th>
+                                <th class="border px-4 py-2">Category</th>
+                                <th class="border px-4 py-2">Sub-category</th>
+                                <th class="border px-4 py-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in page_obj %}
+                            <tr>
+                                <td class="border px-4 py-2">{{ user.first_name }}</td>
+                                <td class="border px-4 py-2">{{ user.email }}</td>
+                                <td class="border px-4 py-2">{{ user.quantity }}</td>
+                                <td class="border px-4 py-2">{{ user.category }}</td>
+                                <td class="border px-4 py-2">{{ user.subcategory }}</td>
+                                <td class="border px-4 py-2">
+                                    <a href="{% url 'admin_update_supinvoice_detail' %}?id={{ user.id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">Lookup</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>             
+
+                <div class="mt-4">
+                    <ul class="flex justify-center space-x-2">
+                        {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-800 text-white rounded">Previous</a></li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        <li>
+                            <a href="?page={{ num }}" class="px-3 py-1 bg-gray-800 text-white rounded {% if page_obj.number == num %}bg-blue-500{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-800 text-white rounded">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
