@@ -13,7 +13,13 @@ from .models import *
 from staff.models import *
 import pandas as pd
 import os
+# import matplotlib.pyplot as plt
+
+import matplotlib
+matplotlib.use("Agg")  # ✅ headless backend for servers
+
 import matplotlib.pyplot as plt
+
 import seaborn as sns
 from django.db.models import Sum
 import io
@@ -37,6 +43,7 @@ def generate_pie_chart_user():
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
+    plt.close()
     buf.seek(0)
     string = base64.b64encode(buf.read())
     uri = urllib.parse.quote(string)
@@ -54,6 +61,7 @@ def generate_pie_chart():
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
+    plt.close()
     buf.seek(0)
     string = base64.b64encode(buf.read())
     uri = urllib.parse.quote(string)
@@ -72,6 +80,7 @@ def generate_bar_chart():
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
+    plt.close()
     buf.seek(0)
     string = base64.b64encode(buf.read())
     uri = urllib.parse.quote(string)
