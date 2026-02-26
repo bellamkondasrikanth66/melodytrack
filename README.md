@@ -75,7 +75,7 @@ This project is ideal for learning **Django full-stack development** and invento
 
 ## 📂 Project Structure
 
-```md
+
 ```
 melodytrack/
 │
@@ -94,7 +94,7 @@ melodytrack/
      ├── admin/
      └── staff/
 ```
-```
+
 
 ---
 
