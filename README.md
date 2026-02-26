@@ -1,11 +1,11 @@
 
-```md
+
 # 🎵 MelodyTrack – Music Inventory Management System
-```md
+
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Django](https://img.shields.io/badge/Django-3.x-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
-```
+
 
 MelodyTrack is a **web-based music inventory management system** built with **Python and Django** to help music stores manage large collections of CDs, albums, and music tracks.
 
